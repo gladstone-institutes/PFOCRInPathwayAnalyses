@@ -21,14 +21,18 @@ args <- commandArgs(trailingOnly=TRUE)
 
 GSE_index <- as.integer(args[1])
 print(GSE_index)
-outdir <- "/wynton/group/gladstone/biocore/projects/pfocr_pathway_enrichment_evaluation/permuted_geneset_databases_results_remove_rSEA3/"
+outdir <- "/wynton/group/gladstone/biocore/projects/pfocr_pathway_enrichment_evaluation/permuted_geneset_databases_results_updated_pfocr_gene_set_sizes_may_2021/"
 
-min_set_size <- 10
+min_set_size <- 3
 max_set_size <- 500 
 dataDir <- "/wynton/group/gladstone/biocore/projects/PFOCR/PFOCRInPathwayAnalyses/"
-database_lists1 <- load("/wynton/group/gladstone/biocore/projects/PFOCR/PFOCRInPathwayAnalyses/databases_pfocr_3sets.RData")#pfocr_3sets
+database_lists1 <- load("/wynton/group/gladstone/biocore/projects/PFOCR/PFOCRInPathwayAnalyses/databases_pfocr_3intersect_v2.RData")#pfocr_3sets
 database_lists2 <- load("/wynton/group/gladstone/biocore/projects/PFOCR/PFOCRInPathwayAnalyses/databases.RData")#has wp, pfocr, go
+database_lists3 <- load("/wynton/group/gladstone/biocore/projects/PFOCR/PFOCRInPathwayAnalyses/pfocr_miny_April2021.RData")#has wp, pfocr, go
+
 database_lists <- append(database_lists1, database_lists2)
+database_lists <- append(database_lists, database_lists3)
+
 database_lists <- unname(unlist(sapply(database_lists, grep, pattern="_list$", value = T, perl = T)))
 for (db in database_lists) {
   eval(call("<-", as.name(db),  Filter(Negate(is.null), lapply(get(db), function(x){
@@ -153,6 +157,19 @@ oNsig_pfocr <- sum(rsea_results_human_voom_pfocr$Comp.adjP < 0.05, na.rm = TRUE)
 print(oNsig_pfocr)
 rNsig_pfcor <- t(sapply(1:Nperm, PermuteDatabase, GSE_index, pfocr_3sets_list, pfocr_annotation_3sets,pvalue_results_human_voom, gene_entrez))
 
-GSE_index_2_100_perm_res <- list(TDPbound_full=TDPbound_full, oNsig_wp=oNsig_wp, rNsig_wp=rNsig_wp, oNsig_go=oNsig_go, rNsig_go=rNsig_go, oNsig_pfocr=oNsig_pfocr, rNsig_pfcor=rNsig_pfcor, oTDP_bound_90_wp=oTDP_bound_90_wp, oTDP_bound_90_go=oTDP_bound_90_go, oTDP_bound_90_pfocr=oTDP_bound_90_pfocr)
+
+rsea_results_human_voom_pfocr_miny=SEA(merged$pvalue, merged$ENTREZID, pathlist = pfocr_miny_list)
+TempRes <- data.frame(Comp.adjP=rsea_results_human_voom_pfocr_miny$Comp.adjP, TDP.bound=rsea_results_human_voom_pfocr_miny$TDP.bound)
+TempRes %<>% filter(Comp.adjP < 0.05)
+TDP_bound_90 <- TempRes %>%
+  .$TDP.bound %>%
+  quantile(.,c(0.5, 0.75, 0.9, 0.95, 0.99), na.rm=TRUE)
+oTDP_bound_90_pfocr_miny <- TDP_bound_90
+
+oNsig_pfocr_miny <- sum(rsea_results_human_voom_pfocr_miny$Comp.adjP < 0.05, na.rm = TRUE)
+print(oNsig_pfocr_miny)
+rNsig_pfcor_miny <- t(sapply(1:Nperm, PermuteDatabase, GSE_index, pfocr_miny_list, pfocr_annotation_miny,pvalue_results_human_voom, gene_entrez))
+
+GSE_index_2_100_perm_res <- list(TDPbound_full=TDPbound_full, oNsig_wp=oNsig_wp, rNsig_wp=rNsig_wp, oNsig_go=oNsig_go, rNsig_go=rNsig_go, oNsig_pfocr=oNsig_pfocr, rNsig_pfcor=rNsig_pfcor, oNsig_pfocr_miny=oNsig_pfocr_miny, rNsig_pfcor_miny=rNsig_pfcor_miny, oTDP_bound_90_wp=oTDP_bound_90_wp, oTDP_bound_90_go=oTDP_bound_90_go, oTDP_bound_90_pfocr=oTDP_bound_90_pfocr, , oTDP_bound_90_pfocr_miny=oTDP_bound_90_pfocr_miny)
 saveRDS(GSE_index_2_100_perm_res, file=paste0(outdir, "GSE_index_",GSE_index,"_",Nperm,"_perm_result.rds"))
 
