@@ -4,11 +4,11 @@
 #$ -l mem_free=5G
 #$ -l scratch=50G
 #$ -l h_rt=24:00:00
-#$ -t 101-536
+#$ -t 1-536
 scriptDir=/wynton/group/gladstone/biocore/projects/pfocr_pathway_enrichment_evaluation/PFOCRInPathwayAnalyses/
 containerDir=/wynton/group/gladstone/biocore/containers
 dataDir=/wynton/group/gladstone/biocore/projects/PFOCR/
-dataDir1=/wynton/group/gladstone/biocore/projects/pfocr_pathway_enrichment_evaluation/permuted_geneset_databases_results_remove_rSEA3/
+dataDir1=/wynton/group/gladstone/biocore/projects/pfocr_pathway_enrichment_evaluation/permuted_geneset_databases_results_updated_pfocr_gene_set_sizes_may_2021/
 export SINGULARITY_BINDPATH="$containerDir,$scriptDir,$dataDir,$dataDir1"
 
 
