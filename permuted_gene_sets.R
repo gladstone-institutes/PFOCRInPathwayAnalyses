@@ -170,6 +170,6 @@ oNsig_pfocr_miny <- sum(rsea_results_human_voom_pfocr_miny$Comp.adjP < 0.05, na.
 print(oNsig_pfocr_miny)
 rNsig_pfcor_miny <- t(sapply(1:Nperm, PermuteDatabase, GSE_index, pfocr_miny_list, pfocr_miny_annotation,pvalue_results_human_voom, gene_entrez))
 
-GSE_index_2_100_perm_res <- list(TDPbound_full=TDPbound_full, oNsig_wp=oNsig_wp, rNsig_wp=rNsig_wp, oNsig_go=oNsig_go, rNsig_go=rNsig_go, oNsig_pfocr=oNsig_pfocr, rNsig_pfcor=rNsig_pfcor, oNsig_pfocr_miny=oNsig_pfocr_miny, rNsig_pfcor_miny=rNsig_pfcor_miny, oTDP_bound_90_wp=oTDP_bound_90_wp, oTDP_bound_90_go=oTDP_bound_90_go, oTDP_bound_90_pfocr=oTDP_bound_90_pfocr, , oTDP_bound_90_pfocr_miny=oTDP_bound_90_pfocr_miny)
+GSE_index_2_100_perm_res <- list(TDPbound_full=TDPbound_full, oNsig_wp=oNsig_wp, rNsig_wp=rNsig_wp, oNsig_go=oNsig_go, rNsig_go=rNsig_go, oNsig_pfocr=oNsig_pfocr, rNsig_pfcor=rNsig_pfcor, oNsig_pfocr_miny=oNsig_pfocr_miny, rNsig_pfcor_miny=rNsig_pfcor_miny, oTDP_bound_90_wp=oTDP_bound_90_wp, oTDP_bound_90_go=oTDP_bound_90_go, oTDP_bound_90_pfocr=oTDP_bound_90_pfocr, oTDP_bound_90_pfocr_miny=oTDP_bound_90_pfocr_miny)
 saveRDS(GSE_index_2_100_perm_res, file=paste0(outdir, "GSE_index_",GSE_index,"_",Nperm,"_perm_result.rds"))
 
