@@ -57,9 +57,9 @@ gene_entrez=readRDS("/wynton/group/gladstone/biocore/projects/PFOCR/PFOCRInPathw
 gene_entrez=readRDS("/wynton/group/gladstone/biocore/projects/PFOCR/PFOCRInPathwayAnalyses/gene_entrez.rds")
 
 ##################################required functions
-source("/wynton/group/gladstone/biocore/projects/PFOCR/PFOCRInPathwayAnalyses/run_rSEA3.r")
-source("/wynton/group/gladstone/biocore/projects/PFOCR/PFOCRInPathwayAnalyses/run_gsea2.r")
-source("/wynton/group/gladstone/biocore/projects/PFOCR/PFOCRInPathwayAnalyses/run_ORA3.r")
+# source("/wynton/group/gladstone/biocore/projects/PFOCR/PFOCRInPathwayAnalyses/run_rSEA3.r")
+# source("/wynton/group/gladstone/biocore/projects/PFOCR/PFOCRInPathwayAnalyses/run_gsea2.r")
+# source("/wynton/group/gladstone/biocore/projects/PFOCR/PFOCRInPathwayAnalyses/run_ORA3.r")
 
 rsea_results_human_voom_pfocr <- vector("list", 9)
 names(rsea_results_human_voom_pfocr) <- c("set_id", "ID", "Coverage", "TDP.bound","TDP.estimate", "SC.adjP", "Comp.adjP")
