@@ -72,7 +72,7 @@ names(rsea_results_human_voom_wp) <- c("set_id", "ID", "Coverage", "TDP.bound","
 
 set.seed(1234)
 
-Nperm <- 10
+Nperm <- 1000
 qLevels <- c(0.5, 0.75, 0.9, 0.95, 0.99)
 names_qLevels <- paste("quantile", round(100*qLevels), sep="_")
 PermuteDatabase <- function(p, GSE_index, path_list, path_annotation,pvalue_results_human_voom, gene_entrez) {
