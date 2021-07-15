@@ -19,6 +19,7 @@ require(readxl)
 require(pROC)
 require(dplyr)
 require(magrittr)
+require(tidyr)
 
 args <- commandArgs(trailingOnly=TRUE)
 
@@ -92,7 +93,7 @@ PermuteDatabase <- function(p, GSE_index, path_list, path_annotation,pvalue_resu
   merged=merge(data_m,gene_entrez,by="Gene",all = "L",all.x=TRUE,all.y=FALSE)
   merged <- merged[!is.na(merged$pvalue) & !is.na(merged$ENTREZID),]
   
-  logFC_data=data.frame(rownames(logFC_results_human_voom),logFC_results_human_voom[,GSE_index])
+  logFC_data=data.frame(logFC_results_human_voom[,GSE_index])
   ### geneList prep
   colnames(logFC_data) <-"FC"
   logFC_data <- add_rownames(as.data.frame(logFC_data), "Gene")
@@ -122,6 +123,7 @@ PermuteDatabase <- function(p, GSE_index, path_list, path_annotation,pvalue_resu
   TDP_bound_90 <- TempRes %>%
     .$aNES %>%
     quantile(.,c(0.5, 0.75, 0.9, 0.95, 0.99), na.rm=TRUE)
+  # print(TempRes)
   Res <- append(Nsig, TDP_bound_90)
   names(Res) <- append("Nsig", names_qLevels)
   print(Res)
@@ -133,10 +135,11 @@ colnames(data_m)=c("Gene","pvalue")
 merged=merge(data_m,gene_entrez,by="Gene",all = "L",all.x=TRUE,all.y=FALSE)
 merged <- merged[!is.na(merged$pvalue) & !is.na(merged$ENTREZID),]
 
-logFC_data=data.frame(rownames(logFC_results_human_voom),logFC_results_human_voom[,GSE_index])
+logFC_data=data.frame(logFC_results_human_voom[,GSE_index])
 ### geneList prep
 colnames(logFC_data) <-"FC"
 logFC_data <- add_rownames(as.data.frame(logFC_data), "Gene")
+
 gene_list <- merged %>%
   left_join(logFC_data, by="Gene") %>%
   mutate(Score = sign(as.numeric(FC)) * - log10(as.numeric(as.character(pvalue)))) %>%
@@ -158,7 +161,7 @@ rsea_results_human_voom_wp <- GSEA(
   pvalueCutoff = 1,
   verbose=FALSE)
 
-TempRes <- data.frame(qvalues=rsea_results_human_voom_wp$qvalues, aNES=rsea_results_human_voom_wp$NES)
+TempRes <- data.frame(qvalues=rsea_results_human_voom_wp$qvalues, aNES=abs(rsea_results_human_voom_wp$NES))
 TempRes %<>% filter(qvalues < 0.05)
 TDP_bound_90 <- TempRes %>%
   .$aNES %>%
@@ -209,7 +212,7 @@ go_gene_prob <- go_annotation %>%
   table() %>%
   divide_by(length(unique_genes))
 
-rNsig_go <- t(sapply(1:Nperm, PermuteDatabase, GSE_index, go_list, go_annotation,pvalue_results_human_voom, gene_entrez, go_gene_prob, logFC_results_human_voom))
+rNsig_go <- t(sapply(1:2, PermuteDatabase, GSE_index, go_list, go_annotation,pvalue_results_human_voom, gene_entrez, go_gene_prob, logFC_results_human_voom))
 
 ##PFCOR-3sets
 rsea_results_human_voom_pfocr <- GSEA(
