@@ -212,7 +212,7 @@ go_gene_prob <- go_annotation %>%
   table() %>%
   divide_by(length(unique_genes))
 
-rNsig_go <- t(sapply(1:2, PermuteDatabase, GSE_index, go_list, go_annotation,pvalue_results_human_voom, gene_entrez, go_gene_prob, logFC_results_human_voom))
+rNsig_go <- t(sapply(1:Nperm, PermuteDatabase, GSE_index, go_list, go_annotation,pvalue_results_human_voom, gene_entrez, go_gene_prob, logFC_results_human_voom))
 
 ##PFCOR-3sets
 rsea_results_human_voom_pfocr <- GSEA(
