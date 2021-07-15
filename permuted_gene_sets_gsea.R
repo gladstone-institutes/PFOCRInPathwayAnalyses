@@ -126,7 +126,7 @@ PermuteDatabase <- function(p, GSE_index, path_list, path_annotation,pvalue_resu
   # print(TempRes)
   Res <- append(Nsig, TDP_bound_90)
   names(Res) <- append("Nsig", names_qLevels)
-  print(Res)
+  # print(Res)
   return(Res)
 }
 
